@@ -1,7 +1,7 @@
 /*
 * @Author: kuychaco
 * @Date:   2015-05-28 15:33:28
-* @Last Modified by:   kuychaco
+* @Last Modified by:   Katrina Uychaco
 */
 
 'use strict';
@@ -50,6 +50,11 @@ controller.loadSchemaAsync()
 .then(function(result) {
   console.log(result);
   return controller.addEndpointDependenciesAsync();
+})
+// Build partial graph
+.then(function(result) {
+  console.log(result);
+  return controller.buildPartialGraphAsync();
 })
 // Verify that nodes were created
 .then(function(result) {
