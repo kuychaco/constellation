@@ -1,7 +1,7 @@
 /*
 * @Author: kuychaco
 * @Date:   2015-06-03 10:20:55
-* @Last Modified by:   kuychaco
+* @Last Modified by:   Katrina Uychaco
 */
 
 'use strict';
@@ -217,6 +217,50 @@ var addEndpointDependencies = function(callback) {
 
 };
 
+var buildPartialGraph = function(callback) {
+  var query = "UPDATE nodes SET downstream_nodes = array_cat(downstream_nodes, ARRAY[4,7,10,13]) WHERE id=2; \
+              UPDATE nodes SET upstream_nodes = array_cat(upstream_nodes, ARRAY[2]) WHERE id=4; \
+              UPDATE nodes SET downstream_nodes = array_cat(downstream_nodes, ARRAY[16]) WHERE id=4; \
+              UPDATE nodes SET upstream_nodes = array_cat(upstream_nodes, ARRAY[2]) WHERE id=7; \
+              UPDATE nodes SET downstream_nodes = array_cat(downstream_nodes, ARRAY[16,19]) WHERE id=7; \
+              UPDATE nodes SET upstream_nodes = array_cat(upstream_nodes, ARRAY[2]) WHERE id=10; \
+              UPDATE nodes SET downstream_nodes = array_cat(downstream_nodes, ARRAY[19]) WHERE id=10; \
+              UPDATE nodes SET upstream_nodes = array_cat(upstream_nodes, ARRAY[2]) WHERE id=13; \
+              UPDATE nodes SET downstream_nodes = array_cat(downstream_nodes, ARRAY[19,22]) WHERE id=13; \
+              UPDATE nodes SET upstream_nodes = array_cat(upstream_nodes, ARRAY[4, 7]) WHERE id=16; \
+              UPDATE nodes SET downstream_nodes = array_cat(downstream_nodes, ARRAY[28]) WHERE id=16; \
+              UPDATE nodes SET upstream_nodes = array_cat(upstream_nodes, ARRAY[7,10,13]) WHERE id=19; \
+              UPDATE nodes SET downstream_nodes = array_cat(downstream_nodes, ARRAY[28]) WHERE id=19; \
+              UPDATE nodes SET upstream_nodes = array_cat(upstream_nodes, ARRAY[13]) WHERE id=22; \
+              UPDATE nodes SET downstream_nodes = array_cat(downstream_nodes, ARRAY[28]) WHERE id=22; \
+              UPDATE nodes SET upstream_nodes = array_cat(upstream_nodes, ARRAY[16,19,22]) WHERE id=28; \
+              UPDATE nodes SET downstream_nodes = array_cat(downstream_nodes, ARRAY[3]) WHERE id=28; \
+              UPDATE nodes SET upstream_nodes = array_cat(upstream_nodes, ARRAY[28]) WHERE id=3; \
+              UPDATE nodes SET downstream_nodes = array_cat(downstream_nodes, ARRAY[52,53]) WHERE id=20; \
+              UPDATE nodes SET upstream_nodes = array_cat(upstream_nodes, ARRAY[20]) WHERE id=52; \
+              UPDATE nodes SET downstream_nodes = array_cat(downstream_nodes, ARRAY[54,55,56]) WHERE id=52; \
+              UPDATE nodes SET upstream_nodes = array_cat(upstream_nodes, ARRAY[20]) WHERE id=53; \
+              UPDATE nodes SET downstream_nodes = array_cat(downstream_nodes, ARRAY[54,55,56]) WHERE id=53; \
+              UPDATE nodes SET upstream_nodes = array_cat(upstream_nodes, ARRAY[53]) WHERE id=54; \
+              UPDATE nodes SET downstream_nodes = array_cat(downstream_nodes, ARRAY[57]) WHERE id=54; \
+              UPDATE nodes SET upstream_nodes = array_cat(upstream_nodes, ARRAY[53]) WHERE id=55; \
+              UPDATE nodes SET downstream_nodes = array_cat(downstream_nodes, ARRAY[57]) WHERE id=55; \
+              UPDATE nodes SET upstream_nodes = array_cat(upstream_nodes, ARRAY[53]) WHERE id=56; \
+              UPDATE nodes SET downstream_nodes = array_cat(downstream_nodes, ARRAY[57]) WHERE id=56; \
+              UPDATE nodes SET upstream_nodes = array_cat(upstream_nodes, ARRAY[54,55,56]) WHERE id=57;"
+
+  pSqlClient
+    .then(function(sqlClient) {
+      return sqlClient.queryAsync(query);
+    })
+    .then(function(results) {
+      callback(null, 'successfully built partial graph');
+    })
+    .catch(function(err) {
+      callback(err, null);
+    });
+};
+
 
 module.exports.loadSchema = loadSchema;
 module.exports.postUsers = postUsers;
@@ -226,3 +270,4 @@ module.exports.closeConnection = closeConnection;
 module.exports.getIssueIds = getIssueIds;
 module.exports.createIssueNodes = createIssueNodes;
 module.exports.addEndpointDependencies = addEndpointDependencies;
+module.exports.buildPartialGraph = buildPartialGraph;
